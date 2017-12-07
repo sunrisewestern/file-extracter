@@ -1,4 +1,4 @@
-Extract file in multiple folders by extention or format
+Extract file from multiple folders by extention or format
 
 ### usage:
       ./file_extracter [-h] [-o output_dir] target_folder [file_extention | file format]  
