@@ -1,8 +1,7 @@
-# collect-files-from-directories
-copy all files from subfolders into a single folder named 'all'
+Extract file in multiple folders by extention or format
 
-bash collect_all_files.sh folder_name
-
-e.g.
-
-bash collect_all_files.sh ~/Downloads
+usage:
+      ./file-extracter target_folder [file_extention | file forat]
+     
+ 
+      
