@@ -1,6 +1,6 @@
 Extract file in multiple folders by extention or format
 
-# usage:
+### usage:
       ./file_extracter [-h] [-o output_dir]target_folder [file_extention | file format]  
       file_format: [p|pic|picture] - BMP JPG JPEG PNG GIF   
                    [v|vid|video] - 3GP ASF AVI FLV M4V MKV MOV MP4 MPEG MPG MPG2 MPG4 RMVB WMV MTS  
