@@ -94,6 +94,7 @@ esac
 }
 
 function usage {
+	echo "Extract file in multiple folders by extention or format."
 	echo "usage: file_extracter [-h] [-o output_dir] target_folder [file_extention | file_format]"
 }
 
