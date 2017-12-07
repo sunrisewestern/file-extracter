@@ -1,0 +1,131 @@
+#!/bin/bash
+
+IFS=$(echo -en "\n\b")
+function cpup() {
+	for file in `ls $1`
+	do
+		if [ "$1/$file" != "$outpath" ]
+		then
+			if [ -d $1"/"$file ]
+			then
+				cpup $1"/"$file
+			else
+				if is_format $file $format
+				then
+					local dirname=${1//\//@}
+					cp -n $1"/"$file $outpath"/"${dirname}${file}
+				fi
+			fi
+		fi
+	done
+}
+
+pic=(BMP JPG JPEG PNG GIF)
+vid=(3GP ASF AVI FLV M4V MKV MOV MP4 MPEG MPG MPG2 MPG4 RMVB WMV MTS)
+aud=(WAV MID CDA MP3 WMA AAC RA OGG APE FLAC M4A M4P AIF AIFF AVI)
+
+function is_vid(){
+	local form=${1##*.}
+	for i in ${vid[@]}
+	do
+		local j=$(echo $i | awk '{print tolower($0)}' )
+		if [[ "$form" == "$i" || "$form" == "$j" ]]
+		then
+			return 0
+		fi
+	done
+	return 1
+}
+
+function is_pic(){
+	local form=${1##*.}
+	for i in ${pic[@]}
+	do
+		local j=$(echo $i | awk '{print tolower($0)}' )
+		if [[ "$form" == "$i" || "$form" == "$j" ]]
+		then
+			return 0
+		fi
+	done
+	return 1
+}
+
+function is_aud(){
+	local form=${1##*.}
+	for i in ${aud[@]}
+	do
+		local j=$(echo $i | awk '{print tolower($0)}' )
+		if [[ "$form" == "$i" || "$form" == "$j" ]]
+		then
+			return 0
+		fi
+	done
+	return 1
+}
+
+function is_else() {
+	local form=${1##*.}
+	if [[ $form == "$2" ]]
+	then
+		return 0
+	fi
+	return 1
+}
+
+
+function is_format(){
+	case $2 in
+	p|pic|picture)
+		is_pic $1
+        ;;
+    v|vid|video)
+		is_vid $1
+        ;;
+	a|aud|audio)
+		is_aud $1
+		;;
+	all)
+		return 0
+		;;
+    *)
+		is_else $1 $2
+        ;;
+esac
+}
+
+function usage {
+	echo "usage: file_extracter [-h] [-o output_dir] target_folder [file_extention | file_format]"
+}
+
+# main
+while getopts o:h opt
+do 
+	case $opt in
+		o)
+			outdir=$(cd $OPTARG;pwd)
+			;;
+		h)
+			usage
+			exit 0
+			;;
+		*)
+			usage >&2
+			exit 1
+			;;
+	esac
+done
+shift $(($OPTIND - 1))
+
+[[ ! -n $1 ]] && usage >&2 && exit 1
+target_dir=$(cd $1;pwd)
+expath=${target_dir%/*}
+postpath=${target_dir##*/}
+
+[[ -n $2 ]] && format=$2 || format="all"
+
+
+[[ -n $outdir ]] && outpath="$outdir"/"$format" || outpath="$(pwd)"/"$format"
+mkdir $outpath
+
+cd "$expath"
+cpup $postpath
