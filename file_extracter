@@ -3,18 +3,18 @@
 IFS=$(echo -en "\n\b")
 function cpup() {
 	for file in `ls $1`
-	do
-		if [ "$1/$file" != "$outpath" ]
+	do		
+		if [[ -d $1"/"$file ]]
 		then
-			if [ -d $1"/"$file ]
+			if [[ $(cd "$1"/"$file";pwd) != $(cd "$outpath";pwd) ]]
 			then
 				cpup $1"/"$file
-			else
-				if is_format $file $format
-				then
-					local dirname=${1//\//@}
-					cp -n $1"/"$file $outpath"/"${dirname}${file}
-				fi
+			fi
+		else
+			if is_format $file $format
+			then
+				local dirname=${1//\//@}
+				cp -n $1"/"$file $outpath"/"${dirname}${file}
 			fi
 		fi
 	done
