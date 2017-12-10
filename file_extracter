@@ -13,8 +13,8 @@ function cpup() {
 		else
 			if is_format $file $format
 			then
-				local dirname=${1//\//@}
-				cp -n $1"/"$file $outpath"/"${dirname}${file}
+				[[ $duplic == "no" ]] || local prefix=${1//\//@}
+				cp -n $1"/"$file $outpath"/"${prefix}${file}
 			fi
 		fi
 	done
@@ -95,16 +95,31 @@ esac
 
 function usage {
 	echo "Extract file in multiple folders by extention or format."
-	echo "usage: file_extracter [-h] [-o output_dir] target_folder [file_extention | file_format]"
+	echo "usage: file_extracter [-m] [-n] [-o] target_folder [file_extention | file_format]"
+	echo """optional arguments:
+	-h	Print this help message and exit 
+	-m	Move (instead of copy)
+	-n	No prefix ahead filename (use only if no duplicated filenames)
+	-o output_dir	Specify an output path, a new dir will be built in this
+			directory.
+	"""
 }
 
 # main
+execute="cp"
+duplic="yes"
 while getopts o:h opt
 do 
 	case $opt in
 		o)
 			outdir=$(cd $OPTARG;pwd)
 			;;
+		m)
+			execute="mv"
+			;;
+		n)
+			duplic="no"
+			;;	
 		h)
 			usage
 			exit 0
@@ -117,16 +132,21 @@ do
 done
 shift $(($OPTIND - 1))
 
-[[ ! -n $1 ]] && usage >&2 && exit 1
+[[ -n $1 ]] || { usage >&2;exit 1; }
 target_dir=$(cd $1;pwd)
 expath=${target_dir%/*}
 postpath=${target_dir##*/}
 
 [[ -n $2 ]] && format=$2 || format="all"
-
-
-[[ -n $outdir ]] && outpath="$outdir"/"$format" || outpath="$(pwd)"/"$format"
+[[ -n $outdir ]] && outpath="$outdir"/"$format" || outpath="$target_dir"/"$format"
 mkdir $outpath
+
+if [[ $execute == "mv" ]]
+then
+	echo "Extracting files and moving them to $outpath ......"
+else
+	echo "Extracting files and coping them to $outpath ......"
+fi
 
 cd "$expath"
 cpup $postpath
