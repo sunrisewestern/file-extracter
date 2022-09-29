@@ -94,17 +94,6 @@ esac
 }
 
 
-#IZPCKNL2RHWDFH7G
-#ESFGEMJO36U2S5Q6
-#EYWJEGYLB6HACNEP
-#F2I4N7PYVARLOCAL
-#FBJMVYYB2GZUZCHC
-#U6MLPSWUFO5WXLTB
-#RMRTP2JGMCLL4XQA
-#GA66POYRM7WHFHMC
-#LDU7ZQ75CEAX4PQH
-#77KYVPFNJEZ3AELR
-
 function usage {
 	echo "Extract file in multiple folders by extention or format."
 	echo "usage: file_extracter [-m] [-n] [-o] target_folder [file_extention | file_format]"
