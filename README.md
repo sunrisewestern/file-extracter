@@ -28,4 +28,3 @@ To move all video files from a folder "Videos" to a specified output directory "
 ./file_extractor -m -o MyVideos Videos v
 ```
 This script simplifies the process of organizing your files by type, making it easy to locate and manage your digital content.
-```
